@@ -46,7 +46,8 @@
 
 ### URL
 
-`localhost:3000/logs?filter_by='{JSON}'`
+`localhost:3000/logs?filter_by='{JSON}&page=1&page_size=25&sort_by=timestamp&sort_order=desc`
+
 
 Страница отображает сырые логи с возможностью:
 - Фильтрации по всем доступным полям
@@ -67,7 +68,8 @@
 `localhost:3000/levels`
 
 Страница по конкретному уровню:  
-`localhost:3000/levels/[level_name]?filter_by='{JSON}'`
+`localhost:3000/levels/[level_name]?filter_by='{JSON}&period=7d&compare_with_previous=true`
+
 
 `localhost:3000/levels` — выбор уровня логирования (INFO, WARN, ERROR, DEBUG).
 
@@ -99,7 +101,7 @@
 ### URL
 
 Страница выбора воронки:  
-`localhost:3000/user-actions?filter_by='{JSON}'&pipeline='["login","dashboard","purchase"]'`
+`localhost:3000/user-actions?filter_by='{JSON}'&funnel='["login","dashboard","purchase"]'`
 
 `localhost:3000/user-actions` — выбор последовательности действий (login→dashboard→purchase).
 
@@ -125,4 +127,3 @@
 - Тепловая карта аномалий по endpoint/hour
 - Топ-5 текущих аномалий
 - График отклонений Z-score
-- Автообновление каждые 30 секунд
