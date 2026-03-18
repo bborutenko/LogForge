@@ -14,8 +14,7 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/logs
 
-**Method:** `GET`  
-**Path:** `/api/logs`  
+**Method:** `GET`
 **Purpose:** Get raw logs list with filtering, sorting and pagination for page `localhost:3000/logs`.
 
 **Query parameters:**
@@ -35,8 +34,7 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/logs/levels-distribution
 
-**Method:** `GET`  
-**Path:** `/api/logs/levels-distribution`  
+**Method:** `GET`
 **Purpose:** Get aggregated data for log levels distribution chart (for logs page).
 
 **Query parameters:**
@@ -46,16 +44,14 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/levels
 
-**Method:** `GET`  
-**Path:** `/api/levels`  
+**Method:** `GET`
 **Purpose:** Get list of available log levels for `localhost:3000/levels`.
 
 ---
 
 ## GET /api/levels/:level_name
 
-**Method:** `GET`  
-**Path:** `/api/levels/:level_name`  
+**Method:** `GET`
 **Purpose:** Get detailed analytics for specific log level for page `localhost:3000/levels/[level_name]`.
 
 **Path parameters:**
@@ -70,8 +66,7 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/levels/:level_name/events-timeseries
 
-**Method:** `GET`  
-**Path:** `/api/levels/:level_name/events-timeseries`  
+**Method:** `GET`
 **Purpose:** Get events time series for selected level (hour/day chart).
 
 **Path parameters:**
@@ -85,8 +80,7 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/levels/:level_name/top-endpoints
 
-**Method:** `GET`  
-**Path:** `/api/levels/:level_name/top-endpoints`  
+**Method:** `GET`
 **Purpose:** Get top endpoints table for selected log level.
 
 **Path parameters:**
@@ -100,16 +94,14 @@ The endpoints below are for getting data to the frontend. Request body format â€
 
 ## GET /api/endpoints
 
-**Method:** `GET`  
-**Path:** `/api/endpoints`  
+**Method:** `GET`
 **Purpose:** Get all endpoints list for `localhost:3000/endpoints`.
 
 ---
 
 ## GET /api/endpoints/:endpoint_name
 
-**Method:** `GET`  
-**Path:** `/api/endpoints/:endpoint_name`  
+**Method:** `GET`
 **Purpose:** Get general aggregated info for specific endpoint (for dashboard header).
 
 **Path parameters:**
