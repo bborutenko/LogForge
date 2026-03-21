@@ -52,7 +52,6 @@ The page displays raw logs with the ability to:
 - Sort (timestamp DESC, level, endpoint)
 - Paginate (25/50/100 records per page)
 - Perform quick search by message
-- Export to CSV
 
 ### **Content**
 

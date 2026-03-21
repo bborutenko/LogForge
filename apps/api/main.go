@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/bborutenko/LogForge/internal/config"
+	"github.com/bborutenko/LogForge/internal/logs"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +13,14 @@ func main() {
 	config.InitDatabase()
 	defer config.DBPool.Close()
 
-	router := gin.Default()
+	r := gin.Default()
+	api := r.Group("/api")
+	{
+		logsGroup := api.Group("/logs")
+		{
+			logsGroup.GET("", logs.ListLogs)
+		}
+	}
 
-	router.Run()
+	r.Run()
 }
