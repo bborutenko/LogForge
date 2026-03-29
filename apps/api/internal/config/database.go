@@ -119,6 +119,17 @@ func scheduleCron(pool *pgxpool.Pool, jobName string, schedule string, command s
 	log.Info().Msgf("Scheduled cron job %s successfully", jobName)
 }
 
+func createIndex(pool *pgxpool.Pool, tableName string, columnName []string, indexType string) {
+	_, err := pool.Exec(context.Background(),
+		`CREATE INDEX IF NOT EXISTS idx_`+tableName+`_`+strings.Join(columnName, "_")+` ON log_forge.`+tableName+` USING `+indexType+` (`+strings.Join(columnName, ", ")+`);`,
+	)
+	if err != nil {
+		log.Fatal().Err(err).Msgf("Failed to create index on %s.%s", tableName, columnName)
+		panic(err)
+	}
+	log.Info().Msgf("Index created successfully on %s.%s", tableName, columnName)
+}
+
 func ConnectDatabase() (*pgxpool.Pool, *pgxpool.Config) {
 	log.Info().Msg("Connecting to database")
 	config, err := pgxpool.ParseConfig(St.DBUrl)
@@ -161,6 +172,9 @@ func InitDatabase() {
 		// scheduleCron(dbPool, "maintain-endpoint-metrics-partitions", "*/30 * * * *", `SELECT public.run_maintenance(p_parent_table := ''log_forge.endpoint_metrics'');`)
 		scheduleCron(dbPool, "maintain-logs-partitions", "*/30 * * * *", `SELECT public.run_maintenance(p_parent_table := ''log_forge.logs'');`)
 		scheduleCron(dbPool, "maintain-user-actions-partitions", "*/30 * * * *", `SELECT public.run_maintenance(p_parent_table := ''log_forge.user_actions'');`)
+
+		createIndex(dbPool, "endpoint_metrics", []string{"user_id"}, "hash")
+		createIndex(dbPool, "logs", []string{"endpoint_metrics_id"}, "btree")
 	}
 	DBPool = dbPool
 }

@@ -9,12 +9,10 @@ func ListLogs(c *gin.Context) {
 	var filterByParams shared.FilterByQueryParams
 	var logsQueryParams LogsQueryParams
 
-	filterByParams.TimeFrom = c.Query("time_from")
-	filterByParams.TimeTo = c.Query("time_to")
-	filterByParams.UserIDs = c.QueryArray("user_ids")
-	filterByParams.StatusCodes = shared.ParseStringArrayIntoIntArray(c.QueryArray("status_codes"))
-	filterByParams.Endpoints = c.QueryArray("endpoints")
-	filterByParams.Meta = c.QueryMap("meta")
+	if err := filterByParams.LoadFromFilterBy(c); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
 	logsQueryParams.Page = shared.ParseStringIntoInt(c.Query("page"))
 	logsQueryParams.PageSize = shared.ParseStringIntoInt(c.Query("page_size"))

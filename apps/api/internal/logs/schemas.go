@@ -4,6 +4,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/bborutenko/LogForge/internal/endpoint_metrics"
 	"github.com/rs/zerolog/log"
 )
 
@@ -32,9 +33,9 @@ func (l *LogsQueryParams) CheckForEmptyParams() error {
 }
 
 type DisplayLogSchema struct {
-	Timestamp         time.Time              `json:"timestamp"`
-	Level             string                 `json:"level"`
-	Message           string                 `json:"message"`
-	Meta              map[string]interface{} `json:"meta,omitempty"`
-	EndpointMetricsID *int64                 `json:"endpoint_metrics_id,omitempty"`
+	Timestamp       time.Time                                      `json:"timestamp"`
+	Level           string                                         `json:"level"`
+	Message         string                                         `json:"message"`
+	Meta            map[string]interface{}                         `json:"meta,omitempty"`
+	EndpointMetrics *endpoint_metrics.DisplayEndpointMetricsSchema `json:"endpoint_metrics,omitempty"`
 }
