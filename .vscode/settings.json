@@ -1,0 +1,6 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "/home/qwissx/source/projects/LogForge/packages/scripts/rust/Cargo.toml"
+  ],
+  "rust-analyzer.server.path": "/home/qwissx/.cargo/bin/rust-analyzer"
+}

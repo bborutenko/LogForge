@@ -27,3 +27,17 @@ func ParseStringIntoInt(str string) int {
 	}
 	return intValue
 }
+
+func CleanStringArray(strArr ...*[]string) {
+	for _, arr := range strArr {
+		*arr = []string{}
+	}
+}
+
+func IntAsStrings(intArr []int) []string {
+	var strArr []string
+	for _, num := range intArr {
+		strArr = append(strArr, strconv.Itoa(num))
+	}
+	return strArr
+}

@@ -2,6 +2,7 @@ package logs
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/rs/zerolog/log"
 
@@ -11,18 +12,24 @@ import (
 )
 
 func buildListLogsQuery(params LogsQueryParams, filterBy shared.FilterByQueryParams) (string, bool) {
+	joinTable := len(filterBy.Endpoints) != 0 || len(filterBy.UserIDs) != 0 || len(filterBy.StatusCodes) != 0
+
 	l := "log_forge.logs"
 	em := "log_forge.endpoint_metrics"
 	query := ""
 
-	limit, offset := BuildLimitOffset(params.Page, params.PageSize)
+	whereTableNames := []string{}
+	whereColumnNames := []string{}
+	whereConditions := []string{}
+	whereOperators := []string{}
+	whereAllValues := []string{}
+
+	limit, offset := shared.BuildLimitOffset(params.Page, params.PageSize)
 
 	queryTables := []string{}
 	queryParams := []string{"timestamp", "level", "message", "meta"}
 
 	shared.AppendValue(&queryTables, l, len(queryParams))
-
-	joinTable := len(filterBy.Endpoints) != 0 || len(filterBy.UserIDs) != 0 || len(filterBy.StatusCodes) != 0
 
 	if joinTable {
 		appendQueryParams := []string{"endpoint", "user_id", "method", "status_code", "response_time_ms", "meta"}
@@ -36,16 +43,33 @@ func buildListLogsQuery(params LogsQueryParams, filterBy shared.FilterByQueryPar
 		shared.JoinTable(&query, l, em, "endpoint_metrics_id", "id")
 	}
 
-	if len(filterBy.UserIDs) != 0 {
-		whereTableNames := []string{}
-		whereColumnNames := []string{}
-		whereConditions := []string{}
-		whereOperators := []string{}
-		shared.AppendValue(&whereTableNames, em, len(filterBy.UserIDs))
-		shared.AppendValue(&whereColumnNames, "user_id", len(filterBy.UserIDs))
-		shared.AppendValue(&whereConditions, "=", len(filterBy.UserIDs))
-		shared.AppendValue(&whereOperators, "OR", len(filterBy.UserIDs)-1)
-		shared.Where(&query, whereTableNames, whereColumnNames, filterBy.UserIDs, whereConditions, whereOperators)
+	for _, userID := range filterBy.UserIDs {
+		whereTableNames = append(whereTableNames, em)
+		whereColumnNames = append(whereColumnNames, "user_id")
+		whereConditions = append(whereConditions, "=")
+		whereAllValues = append(whereAllValues, userID)
+	}
+
+	for _, endpoint := range filterBy.Endpoints {
+		whereTableNames = append(whereTableNames, em)
+		whereColumnNames = append(whereColumnNames, "endpoint")
+		whereConditions = append(whereConditions, "=")
+		whereAllValues = append(whereAllValues, endpoint)
+	}
+
+	for _, statusCode := range filterBy.StatusCodes {
+		whereTableNames = append(whereTableNames, em)
+		whereColumnNames = append(whereColumnNames, "status_code")
+		whereConditions = append(whereConditions, "=")
+		whereAllValues = append(whereAllValues, strconv.Itoa(statusCode))
+	}
+
+	for i := 0; i < len(whereAllValues)-1; i++ {
+		whereOperators = append(whereOperators, "OR")
+	}
+
+	if len(whereAllValues) > 0 {
+		shared.Where(&query, whereTableNames, whereColumnNames, whereAllValues, whereConditions, whereOperators)
 	}
 
 	shared.OrderBy(&query, params.SortBy, params.SortOrder)

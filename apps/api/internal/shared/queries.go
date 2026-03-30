@@ -11,6 +11,12 @@ func mergeStringsArray(builder *strings.Builder, mergeStrings *[]string) {
 	}
 }
 
+func BuildLimitOffset(page int, pageSize int) (int, int) {
+	limit := pageSize
+	offset := (page - 1) * pageSize
+	return limit, offset
+}
+
 func Param(tableName string, param string) string {
 	var builder strings.Builder
 	mergeStrings := []string{
